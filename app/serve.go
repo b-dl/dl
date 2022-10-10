@@ -12,6 +12,8 @@ import (
 	"time"
 
 	"github.com/b-dl/dl/logger"
+	"github.com/b-dl/dl/request"
+	"github.com/b-dl/dl/ws"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
@@ -21,10 +23,22 @@ func serveAction(c *cli.Context) error {
 	cli.VersionPrinter(c)
 	logger.Init(path.Join("log"), c.String("level"))
 
+	request.SetOptions(request.RequestOptions{
+		RetryTimes: int(c.Uint("retry-times")),
+		Timeout:    int64(c.Uint("timeout")),
+	})
+
+	hub := ws.NewHub()
+	go hub.Run()
+
 	srv := http.Server{
 		Addr:    fmt.Sprintf(":%d", c.Uint("port")),
 		Handler: http.DefaultServeMux,
 	}
+
+	http.HandleFunc("/ws", func(rw http.ResponseWriter, r *http.Request) {
+		ws.Ws(hub, rw, r)
+	})
 
 	go func() {
 		sigint := make(chan os.Signal, 1)

@@ -87,61 +87,9 @@ func New() *cli.App {
 		Version: Version,
 		Commands: []*cli.Command{
 			{
-				Name:  "cmd",
-				Usage: "Terminal downloader",
-				Flags: append([]cli.Flag{
-					&cli.StringFlag{
-						Name:    "cookie",
-						Aliases: []string{"c"},
-						Usage:   "Cookie",
-					},
-					&cli.BoolFlag{
-						Name:    "playlist",
-						Aliases: []string{"p"},
-						Usage:   "Download playlist",
-					},
-					&cli.StringFlag{
-						Name:    "user-agent",
-						Aliases: []string{"u"},
-						Usage:   "Use specified User-Agent",
-					},
-					&cli.StringFlag{
-						Name:    "refer",
-						Aliases: []string{"r"},
-						Usage:   "Use specified Referrer",
-					},
-					&cli.StringFlag{
-						Name:    "stream-format",
-						Aliases: []string{"f"},
-						Usage:   "Select specific stream to download",
-					},
-					&cli.StringFlag{
-						Name:    "output-name",
-						Aliases: []string{"on", "ON"},
-						Usage:   "Specify the output file name",
-					},
-					&cli.UintFlag{
-						Name:  "start",
-						Value: 1,
-						Usage: "Define the starting item of a playlist or a file input",
-					},
-					&cli.UintFlag{
-						Name:  "end",
-						Value: 0,
-						Usage: "Define the ending item of a playlist or a file input",
-					},
-					&cli.BoolFlag{
-						Name:    "multi-thread",
-						Aliases: []string{"m"},
-						Usage:   "Multiple threads to download single video",
-					},
-					&cli.UintFlag{
-						Name:    "thread",
-						Aliases: []string{"n"},
-						Value:   10,
-						Usage:   "The number of download thread (only works for multiple-parts video)",
-					},
-				}, baseFlags...),
+				Name:   "cmd",
+				Usage:  "Terminal downloader",
+				Flags:  append(terminalFlags, baseFlags...),
 				Action: terminalAction,
 			},
 			{
