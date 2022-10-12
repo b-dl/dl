@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -13,10 +12,13 @@ import (
 
 	"github.com/b-dl/dl/logger"
 	"github.com/b-dl/dl/request"
+	"github.com/b-dl/dl/router"
 	"github.com/b-dl/dl/ws"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
+
+const port = "10101"
 
 func serveAction(c *cli.Context) error {
 	start := time.Now()
@@ -32,13 +34,16 @@ func serveAction(c *cli.Context) error {
 	go hub.Run()
 
 	srv := http.Server{
-		Addr:    fmt.Sprintf(":%d", c.Uint("port")),
+		Addr:    ":" + port,
 		Handler: http.DefaultServeMux,
 	}
 
 	http.HandleFunc("/ws", func(rw http.ResponseWriter, r *http.Request) {
 		ws.Ws(hub, rw, r)
 	})
+
+	http.HandleFunc("/ping", router.Ping)
+	http.HandleFunc("/token", router.Token)
 
 	go func() {
 		sigint := make(chan os.Signal, 1)
@@ -56,7 +61,7 @@ func serveAction(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	logrus.Infof("Service listening port number: %d", c.Uint("port"))
+	logrus.Infof("Service listening port number: %s", port)
 	logrus.Infof("Service startup time: %d μs", time.Since(start).Microseconds())
 
 	err = srv.Serve(ln)

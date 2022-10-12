@@ -93,20 +93,14 @@ func New() *cli.App {
 				Action: terminalAction,
 			},
 			{
-				Name:  "serve",
-				Usage: "Deploy as a service",
-				Flags: append([]cli.Flag{
-					&cli.UintFlag{
-						Name:    "port",
-						Aliases: []string{"p", "P"},
-						Value:   10101,
-						Usage:   "Service port",
-						EnvVars: []string{"DL_PORT"},
-					},
-				}, baseFlags...),
+				Name:   "serve",
+				Usage:  "Deploy as a service",
+				Flags:  baseFlags,
 				Action: serveAction,
 			},
 		},
+		Flags:                  baseFlags,
+		Action:                 serveAction,
 		UseShortOptionHandling: true,
 		EnableBashCompletion:   true,
 	}
