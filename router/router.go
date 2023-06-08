@@ -3,13 +3,17 @@ package router
 import (
 	"net/http"
 
-	"github.com/b-dl/dl/tool"
+	"github.com/b-dl/dl/logger"
+	"github.com/sirupsen/logrus"
 )
 
 func Ping(rw http.ResponseWriter, r *http.Request) {
-	rw.Write(tool.Str2Bytes(`{"code":0,"msg":"服务正常"}`))
+	logger.Request(r)
+	rw.WriteHeader(http.StatusOK)
 }
 
 func Token(rw http.ResponseWriter, r *http.Request) {
-	rw.Write(nil)
+	logger.Request(r)
+	authorization := r.Header.Get("Authorization")
+	logrus.Debug(authorization)
 }

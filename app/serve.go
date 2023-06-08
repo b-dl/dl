@@ -62,7 +62,7 @@ func serveAction(c *cli.Context) error {
 		return err
 	}
 	logrus.Infof("Service listening port number: %s", port)
-	logrus.Infof("Service startup time: %d μs", time.Since(start).Microseconds())
+	logrus.Infof("Service startup time: %.3f s", time.Since(start).Abs().Seconds())
 
 	err = srv.Serve(ln)
 	if err != nil && err != http.ErrServerClosed {

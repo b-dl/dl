@@ -1,10 +1,18 @@
 package logger
 
 import (
+	"fmt"
 	"io"
+	"net/http"
 	"os"
 
+	"github.com/fatih/color"
+	"github.com/kr/pretty"
 	"github.com/sirupsen/logrus"
+)
+
+var (
+	LogBlue = color.New(color.FgBlue)
 )
 
 func Init(logFile string, level string) {
@@ -29,4 +37,13 @@ func Init(logFile string, level string) {
 	fileAndStdoutWriter := io.MultiWriter(writers...)
 	logrus.SetOutput(fileAndStdoutWriter)
 	logrus.Info("Log initialization succeeded")
+}
+
+func Request(r *http.Request) {
+	LogBlue.Printf("URL:     ")
+	fmt.Printf("%s\n", r.URL.String())
+	LogBlue.Printf("Method:  ")
+	fmt.Printf("%s\n", r.Method)
+	LogBlue.Printf("Headers: ")
+	pretty.Printf("%# v\n", r.Header)
 }
